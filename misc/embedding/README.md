@@ -1,6 +1,44 @@
-# "Inheritance" with embedding structs
-[![GoDoc](https://godoc.org/github.com/FiloSottile/gvt?status.svg)](https://godoc.org/github.com/mycodesmells/golang-examples/misc/embedding?status.svg)
 
-Inspired by Sean Kelly's talk on Golang UK 2017 ([video](https://www.youtube.com/watch?v=-LzYjMzfGDQ)).
+package embedding
+=======
+package models
 
-See examples on [GoDoc page](https://godoc.org/github.com/mycodesmells/golang-examples/misc/embedding).
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type MusicStar struct {
+	Singer
+
+
+	ID       string `json:"id,omitempty"`
+
+	Nickname string `json:"nickname,omitempty"`
+	DoB      string `json:"dob,omitempty"`
+}
+
+
+func (p MusicStar) Type() string {
+	return "MUSIC★"
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (type=%s) greets the people of %s!!\n", ms.Name, ms.Type(), city)
+
+func (p MusicStar) Id() string {
+	return fmt.Sprintf("★-%s", p.ID)
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (ID: %s) greets the people of %s!!\n", ms.Name, ms.Id(), city)
+}
+
+func (ms MusicStar) ToJSON() (string, error) {
+	bs, err := json.Marshal(ms)
+	if err != nil {
+		return "", err
+	}
+	return string(bs), nil
+}
