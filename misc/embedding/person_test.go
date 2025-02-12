@@ -1,23 +1,44 @@
-package embedding_test
+
+package embedding
+=======
+package models
+
 
 import (
+	"encoding/json"
 	"fmt"
-
-	"github.com/mycodesmells/golang-examples/misc/embedding"
 )
 
-func ExamplePerson_Talk() {
-	p := embedding.Person{Name: "John Doe"}
-	p.Talk("Hi there!")
-	// output: John Doe (type=PERSON) says "Hi there!"
+type MusicStar struct {
+	Singer
+
+
+	ID       string `json:"id,omitempty"`
+
+	Nickname string `json:"nickname,omitempty"`
+	DoB      string `json:"dob,omitempty"`
 }
 
-func ExamplePerson_ToJSON() {
-	p := embedding.Person{
-		Name: "John Doe",
-		DoB:  "01-02-1975",
+
+func (p MusicStar) Type() string {
+	return "MUSIC★"
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (type=%s) greets the people of %s!!\n", ms.Name, ms.Type(), city)
+
+func (p MusicStar) Id() string {
+	return fmt.Sprintf("★-%s", p.ID)
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (ID: %s) greets the people of %s!!\n", ms.Name, ms.Id(), city)
+}
+
+func (ms MusicStar) ToJSON() (string, error) {
+	bs, err := json.Marshal(ms)
+	if err != nil {
+		return "", err
 	}
-	pJSON, _ := p.ToJSON()
-	fmt.Println(pJSON)
-	// output: {"name":"John Doe","dob":"01-02-1975"}
+	return string(bs), nil
 }
