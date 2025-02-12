@@ -1,42 +1,44 @@
-package embedding_test
+
+package embedding
+=======
+package models
+
 
 import (
+	"encoding/json"
 	"fmt"
-
-	"github.com/mycodesmells/golang-examples/misc/embedding"
 )
 
-func ExampleMusicStar() {
-	ms := embedding.MusicStar{
-		Nickname: "Starry",
-		Singer: embedding.Singer{
-			Person: embedding.Person{
-				Name: "Joe Star",
-			},
-			MusicGenre: "pop",
-		},
-	}
-	ms.GreetCrowd("Oklahoma")
-	ms.Sing("To the top")
-	ms.Talk("Thank you!!")
-	// output:
-	// Joe Star (type=MUSIC★) greets the people of Oklahoma!!
-	// Joe Star (type=SINGER) sings To the top in the style of pop.
-	// Joe Star (type=PERSON) says "Thank you!!"
+type MusicStar struct {
+	Singer
+
+
+	ID       string `json:"id,omitempty"`
+
+	Nickname string `json:"nickname,omitempty"`
+	DoB      string `json:"dob,omitempty"`
 }
 
-func ExampleMusicStar_ToJSON() {
-	ms := embedding.MusicStar{
-		Nickname: "Starry",
-		Singer: embedding.Singer{
-			Person: embedding.Person{
-				Name: "Joe Star",
-				DoB:  "01-02-1975",
-			},
-			MusicGenre: "pop",
-		},
+
+func (p MusicStar) Type() string {
+	return "MUSIC★"
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (type=%s) greets the people of %s!!\n", ms.Name, ms.Type(), city)
+
+func (p MusicStar) Id() string {
+	return fmt.Sprintf("★-%s", p.ID)
+}
+
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (ID: %s) greets the people of %s!!\n", ms.Name, ms.Id(), city)
+}
+
+func (ms MusicStar) ToJSON() (string, error) {
+	bs, err := json.Marshal(ms)
+	if err != nil {
+		return "", err
 	}
-	msJSON, _ := ms.ToJSON()
-	fmt.Println(msJSON)
-	// output: {"name":"Joe Star","music_genre":"pop","nickname":"Starry"}
+	return string(bs), nil
 }
