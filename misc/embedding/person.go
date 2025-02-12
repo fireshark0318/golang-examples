@@ -1,26 +1,42 @@
+
+package embedding
+=======
 package models
+
 
 import (
 	"encoding/json"
 	"fmt"
 )
 
-type Person struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	DoB  string `json:"dob,omitempty"`
+type MusicStar struct {
+	Singer
+
+
+	ID       string `json:"id,omitempty"`
+
+	Nickname string `json:"nickname,omitempty"`
+	DoB      string `json:"dob,omitempty"`
 }
 
-func (p Person) Id() string {
-	return fmt.Sprintf("P-%s", p.ID)
+
+func (p MusicStar) Type() string {
+	return "MUSIC★"
 }
 
-func (p Person) Talk(message string) {
-	fmt.Printf("%s (a person, ID: %s) says \"%s\"\n", p.Name, p.Id(), message)
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (type=%s) greets the people of %s!!\n", ms.Name, ms.Type(), city)
+
+func (p MusicStar) Id() string {
+	return fmt.Sprintf("★-%s", p.ID)
 }
 
-func (p Person) ToJSON() (string, error) {
-	bs, err := json.Marshal(p)
+func (ms MusicStar) GreetCrowd(city string) {
+	fmt.Printf("%s (ID: %s) greets the people of %s!!\n", ms.Name, ms.Id(), city)
+}
+
+func (ms MusicStar) ToJSON() (string, error) {
+	bs, err := json.Marshal(ms)
 	if err != nil {
 		return "", err
 	}
